@@ -62,6 +62,7 @@
     	const
 		    query = s => document.querySelector(s),
 		    queryAll = s => [...document.querySelectorAll(s)],
+		    once = (el, event, handler) => el.addEventListener(event, handler, { once: true }),
 
 		    keys = new Set(queryAll(".key").map(elm => +elm.dataset.key));
 
@@ -69,13 +70,13 @@
         	let keyCode = String.fromCharCode(e.keyCode).toUpperCase().charCodeAt(0);
         	if(keys.has(keyCode)){
 		        flashClass(query(`.key[data-key="${keyCode}"]`), "playing");
-        		query(`audio[data-key="${keyCode}"]`).play()
+        		query(`audio[data-key="${keyCode}"]`).cloneNode(true).play()
 	        }
         });
 
-	    function flashClass(element, className, duration=10){
-		    element.classList.add(className);
-    		setTimeout(() => element.classList.remove(className), duration)
+	    function flashClass(el, className){
+		    once(el, "transitionend", () => el.classList.remove(className));
+		    el.classList.add(className);
 	    }
     }
 </script>
