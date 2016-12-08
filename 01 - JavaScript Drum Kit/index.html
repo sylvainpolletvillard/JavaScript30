@@ -9,8 +9,8 @@
 
 
   <div class="keys">
-    <div data-key="65" class="key">
-      <kbd>A</kbd>
+    <div data-key="81" class="key">
+      <kbd>Q</kbd>
       <span class="sound">clap</span>
     </div>
     <div data-key="83" class="key">
@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="81" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
   <audio data-key="68" src="sounds/kick.wav"></audio>
   <audio data-key="70" src="sounds/openhat.wav"></audio>
@@ -58,26 +58,28 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+    {
+    	const
+		    query = s => document.querySelector(s),
+		    queryAll = s => [...document.querySelectorAll(s)],
 
+		    keys = new Set(queryAll(".key").map(elm => +elm.dataset.key));
 
-  function playSound(e) {
-    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
-    if (!audio) return; // stop the fucntion from running all together
-    audio.currentTime = 0; // rewind to the start
-    audio.play();
-    key.classList.add('playing');
-  }
-  function removeTransition(e) {
-    if (e.propertyName !== 'transform') return; // skip it if it's not a transform
-    this.classList.remove('playing');
-  }
+        window.addEventListener("keydown", e => {
+        	let keyCode = String.fromCharCode(e.keyCode).toUpperCase().charCodeAt(0);
+        	if(keys.has(keyCode)){
+		        flashClass(query(`.key[data-key="${keyCode}"]`), "playing");
+        		query(`audio[data-key="${keyCode}"]`).play()
+	        }
+        });
 
-  const keys = document.querySelectorAll('.key');
-  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
-  window.addEventListener('keydown', playSound);
-
+	    function flashClass(element, className, duration=10){
+		    element.classList.add(className);
+    		setTimeout(() => element.classList.remove(className), duration)
+	    }
+    }
 </script>
+
 
 </body>
 </html>
