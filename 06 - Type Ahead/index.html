@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Type Ahead 👀</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<form class="search-form">
+	<input type="text" class="search" placeholder="City or State">
+	<ul class="suggestions">
+		<li>Filter for a city</li>
+		<li>or a state</li>
+	</ul>
+</form>
+<script>
+	const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+	fetch(endpoint)
+		.then(res => res.json())
+		.then(onload);
+
+	function onload(cities){
+		const
+			input = document.querySelector("input.search"),
+		    suggestions = document.querySelector(".suggestions"),
+		    numberFormatter = window.Intl && Intl.NumberFormat ? new Intl.NumberFormat().format : n => n;
+
+		input.addEventListener("input", () => {
+			let query = input.value.trim().toUpperCase();
+
+			suggestions.innerHTML = cities
+				.filter(city => ["city","state"].some(data => city[data].toUpperCase().includes(query)))
+				.sort((a,b) => +a.rank - b.rank)
+				.map(city => `<li>
+					<span class="name">${city.city}, ${city.state}</span>
+					<span class="population">${numberFormatter(city.population)}</span>
+				</li>`)
+				.join('\n') || `<li>No results found :(</li>`
+		});
+
+		suggestions.addEventListener("click", event => {
+			if(event.target.nodeName === "LI"){
+				input.value = event.target.textContent;
+				suggestions.innerHTML = '';
+				input.focus();
+			}
+		});
+	}
+
+</script>
+</body>
+</html>
