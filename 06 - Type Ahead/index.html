@@ -25,24 +25,26 @@
 		const
 			input = document.querySelector("input.search"),
 		    suggestions = document.querySelector(".suggestions"),
-		    numberFormatter = window.Intl && Intl.NumberFormat ? new Intl.NumberFormat().format : n => n;
+		    numberFormatter = window.Intl && Intl.NumberFormat ? new Intl.NumberFormat().format : n => n,
+		    highlight = (str, query) => str.replace(query, `<span class="hl">$&</span>`)
 
 		input.addEventListener("input", () => {
-			let query = input.value.trim().toUpperCase();
+			let query = new RegExp(input.value.trim(), "gi");
 
 			suggestions.innerHTML = cities
-				.filter(city => ["city","state"].some(data => city[data].toUpperCase().includes(query)))
+				.filter(city => ["city","state"].some(data => query.test(city[data])))
 				.sort((a,b) => +a.rank - b.rank)
-				.map(city => `<li>
-					<span class="name">${city.city}, ${city.state}</span>
+				.map(city => `<li class="suggestion">
+					<span class="name">${highlight(city.city, query)}, ${highlight(city.state, query)}</span>
 					<span class="population">${numberFormatter(city.population)}</span>
 				</li>`)
 				.join('\n') || `<li>No results found :(</li>`
 		});
 
 		suggestions.addEventListener("click", event => {
-			if(event.target.nodeName === "LI"){
-				input.value = event.target.textContent;
+			let suggestion = event.target.closest(".suggestion");
+			if(suggestion){
+				input.value = suggestion.querySelector(".name").textContent;
 				suggestions.innerHTML = '';
 				input.focus();
 			}
