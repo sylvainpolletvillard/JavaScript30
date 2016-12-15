@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+	const hypothenuse = (x,y) => Math.sqrt(x*x + y*y);
+
+	const canvas = document.querySelector("canvas");
+	const ctx = canvas.getContext("2d");
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	Object.assign(ctx, {
+		strokeStyle: "red",
+		lineJoin: "round",
+		lineCap: "round"
+	});
+
+	let isMousePressed = false,
+        hue = 0,
+        width = 10,
+        dx = 0,
+        dy = 0;
+
+	window.addEventListener("mousedown", () => isMousePressed = true);
+	window.addEventListener("mouseup", () => isMousePressed = false);
+	window.addEventListener("mousemove", event => {
+		if(!isMousePressed) return;
+
+		width += Math.min(100, 5*(hypothenuse(event.movementX, event.movementY) - hypothenuse(dx, dy)));
+		hue = (hue+1) % 360;
+		dx = event.movementX;
+		dy = event.movementY;
+
+		ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+		ctx.lineWidth = width;
+
+		ctx.beginPath();
+		ctx.moveTo(event.offsetX - dx, event.offsetY - dy);
+		ctx.lineTo(event.offsetX, event.offsetY);
+		ctx.closePath();
+		ctx.stroke();
+	});
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+</style>
+
+</body>
+</html>
