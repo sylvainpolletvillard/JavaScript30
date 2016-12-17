@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+
+		html {
+			font-family: sans-serif;
+			background:#ffc600;
+		}
+
+		.inbox {
+			max-width:400px;
+			margin:50px auto;
+			background:white;
+			border-radius:5px;
+			box-shadow:10px 10px 0 rgba(0,0,0,0.1);
+		}
+
+		.item {
+			display:flex;
+			align-items:center;
+			border-bottom: 1px solid #F1F1F1;
+		}
+
+		.item:last-child {
+			border-bottom:0;
+		}
+
+
+		input:checked + p {
+			background:#F9F9F9;
+			text-decoration: line-through;
+		}
+
+		input[type="checkbox"] {
+			margin:20px;
+		}
+
+		p {
+			margin:0;
+			padding:20px;
+			transition:background 0.2s;
+			flex:1;
+			font-family:'helvetica neue',sans-serif;
+			font-size: 20px;
+			font-weight: 200;
+			border-left: 1px solid #D1E2FF;
+		}
+
+	</style>
+</head>
+<body>
+
+<!--
+The following is a common layout you would see in an email client.
+
+When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+-->
+<div class="inbox">
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			This is an inbox layout.
+		</label>
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Check one item
+		</label>
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Hold down your Shift key
+		</label>
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Check a lower item
+		</label>
+	</div>
+	<div class="item">
+		<input type="checkbox">
+		Everything inbetween should also be set to checked
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Try do it with out any libraries
+		</label>
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Just regular JavaScript
+		</label>
+	</div>
+	<div class="item">
+		<input type="checkbox">
+		Good Luck!
+	</div>
+	<div class="item">
+		<label>
+			<input type="checkbox">
+			Don't forget to tweet your result!
+		</label>
+	</div>
+</div>
+
+<script>
+	const checkboxes = [...document.querySelectorAll("input[type='checkbox']")];
+	let lastChecked;
+
+	for(let cb of checkboxes){
+		cb.addEventListener("click", event => {
+			if(event.shiftKey && lastChecked){
+				let [first, last] = [checkboxes.indexOf(lastChecked), checkboxes.indexOf(cb)].sort();
+				checkboxes.slice(first, last).forEach(c => c.checked = true)
+			}
+			lastChecked = cb.checked ? cb : null;
+		})
+	}
+
+</script>
+</body>
+</html>
