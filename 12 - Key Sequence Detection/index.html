@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+</head>
+<body>
+<h1>My serious website</h1>
+<p>bla bla bla</p>
+<script>
+  const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+  let seq = [];
+
+  window.addEventListener("keyup", e => {
+  	if(konamiCode[seq.length] === e.keyCode) seq.push(e.keyCode);
+    else seq = [];
+    if(seq.length === konamiCode.length) onKonamiCode();
+  });
+
+  function onKonamiCode(){
+      window.location.href = "http://ducksarethebest.com/"
+  }
+
+</script>
+</body>
+</html>
