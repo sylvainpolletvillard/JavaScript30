@@ -68,6 +68,18 @@
       content: '🌮';
     }
 
+    .plates button {
+        font-size: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .plates button::before {
+        content: "❌";
+        display: inline-block;
+        font-size: initial;
+    }
+
     .add-items {
       margin-top: 20px;
     }
