@@ -29,8 +29,6 @@ body {
   white-space: nowrap;
   user-select: none;
   cursor: pointer;
-  transition: all 0.2s;
-  transform: scale(0.98);
   position: relative;
   background: rgba(255,255,255,0.1);
   font-size: 0;
@@ -41,7 +39,6 @@ body {
   background: rgba(255,255,255,0.3);
   cursor: grabbing;
   cursor: -webkit-grabbing;
-  transform: scale(1);
 }
 
 .item {
