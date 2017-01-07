@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Video Speed Scrubber</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrapper">
+	<video class="flex" width="765" height="430"
+	       src="https://www.dropbox.com/s/nf6jfkwck1glsyo/12%20-%20flex-wrapping-and-columns.mp4?dl=1" loop
+	       controls></video>
+	<div class="speed">
+		<div class="speed-bar">1×</div>
+	</div>
+</div>
+
+<script>
+	const bar             = document.querySelector(".speed");
+	const video           = document.querySelector("video");
+	const minPlaybackRate = 0.25;
+	const maxPlaybackRate = 4;
+
+	let isPointerDown = false;
+
+	function activateBar() {
+		isPointerDown = true;
+		bar.classList.add("active");
+	}
+
+	function desactivateBar() {
+		isPointerDown = false;
+		bar.classList.remove("active");
+	}
+
+	function moveBar(e) {
+		if (!isPointerDown) return;
+		let fraction = Math.max(0, Math.min(1, (e.pageY - bar.offsetTop) / bar.offsetHeight));
+		let playbackRate = minPlaybackRate + (maxPlaybackRate - minPlaybackRate) * fraction;
+		bar.firstElementChild.style.height = `${(fraction * 100).toFixed(2)}%`;
+		bar.firstElementChild.textContent = `${playbackRate.toFixed(2)}x`;
+		video.playbackRate = playbackRate;
+	}
+
+	bar.addEventListener("pointerdown", activateBar);
+	bar.addEventListener("pointermove", moveBar);
+	bar.addEventListener("pointerup", desactivateBar);
+	bar.addEventListener("mouseleave", desactivateBar);
+
+</script>
+</body>
+</html>
